@@ -1,6 +1,6 @@
 public class Enumerations {
     public enum LocationType{
-        Airport,
-        Trainstation
+        AIRPORT,
+        TRAINSTATION
     }
 }
