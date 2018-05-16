@@ -28,11 +28,11 @@ public class DataReader {
     private DataEntry GetEntryData(String dataString){
         String[]dataPoints = dataString.split(";");
         String name = dataPoints[0];
-        double x = Double.parseDouble(dataPoints[1]);
-        double y = Double.parseDouble(dataPoints[2]);
+        double lat = Double.parseDouble(dataPoints[1]);
+        double lon = Double.parseDouble(dataPoints[2]);
         Enumerations.LocationType type = Enumerations.LocationType.valueOf(dataPoints[3]);
 
-        return new DataEntry(name, x, y, type);
+        return new DataEntry(name, lat, lon, type);
     }
 
 
