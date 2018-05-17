@@ -40,4 +40,26 @@ public class InRangeEntries {
     private static double degreeToRad (double deg){
         return deg*Math.PI/180;
     }
+
+
+    /*
+    Anzahl aller Flughäfen berechnet, in deren r -Längeneinheiten- Umkreis sich mindestens n Bahnhöfe befinden
+     */
+    public static int numAirportsInRangeOfTrainstations(ArrayList<DataEntry> entries, double radius){
+        int numberAirportsInRange = 0;
+
+        for(int i = 0; i< entries.size();i++){
+            if (entries.get(i).getType() != Enumerations.LocationType.AIRPORT) continue;
+            for (int j = 0; j < entries.size(); j++) {
+                if(entries.get(j).getType() == Enumerations.LocationType.TRAINSTATION){
+                    if(inRadiusRange(entries.get(j).getLat(), entries.get(j).getLon(), entries.get(i).getLat(), entries.get(i).getLon(), radius)) {
+                        numberAirportsInRange++;
+                    }
+                }
+            }
+        }
+        return numberAirportsInRange;
+    }
+
+
 }
