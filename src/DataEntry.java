@@ -5,16 +5,16 @@ import java.security.InvalidParameterException;
  */
 public class DataEntry {
     private String name;
-    private double lat;
-    private double lon;
+    private double x;
+    private double y;
     private Enumerations.LocationType type;
 
     
     public DataEntry(String name, double lat, double lon, Enumerations.LocationType type){
         if (name == null) throw new InvalidParameterException();
         this.name = name;
-        this.lat = lat;
-        this.lon = lon;
+        this.x = lat;
+        this.y = lon;
         this.type = type;
     }
 
@@ -26,12 +26,12 @@ public class DataEntry {
         return name;
     }
 
-    public double getLat() {
-        return lat;
+    public double getX() {
+        return x;
     }
 
-    public double getLon() {
-        return lon;
+    public double getY() {
+        return y;
     }
 
     public Enumerations.LocationType getType() {
