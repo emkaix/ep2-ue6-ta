@@ -10,11 +10,11 @@ public class DataEntry {
     private Enumerations.LocationType type;
 
     
-    public DataEntry(String name, double lat, double lon, Enumerations.LocationType type){
+    public DataEntry(String name, double x, double y, Enumerations.LocationType type){
         if (name == null) throw new InvalidParameterException();
         this.name = name;
-        this.x = lat;
-        this.y = lon;
+        this.x = x;
+        this.y = y;
         this.type = type;
     }
 
