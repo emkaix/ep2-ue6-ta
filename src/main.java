@@ -4,11 +4,18 @@ public class main {
 
 
     public static void main(String[] args) {
-        DataReader dr = new DataReader();
-        ArrayList<DataEntry> entries = dr.ReadEntriesFromFile(System.getProperty("user.dir") + "/data/junctions.csv");
-        ArrayList<DataEntry> result = InRangeEntries.addInRangeEntrys(entries, entries.get(0).getX(), entries.get(0).getY(),300);
-        System.out.println(result.toString());
-        System.out.println(InRangeEntries.AirportsInTrainstationRange(entries, 10, 30 ));
+        //das wird mit jeder anderen datenstruktur als parameter auch funktionieren
+        DataReader dr = new DataReader(new SimpleDataCollection());
+        IDataCollection dc = dr.ReadEntriesFromFile();
+
+        //zweite beispielanfrage laut angabezettel
+        EntryCount counter = dc.inRange(new Vector2D(1818.54657, 5813.29982), 100);
+        System.out.println(counter);
+
+        //vierte abfrage leuat angabezettel
+        EntryCount counter2 = dc.TrainstationsNearAirports(15, 20);
+        System.out.println(counter2.printAirports());
+
 
 
     }
