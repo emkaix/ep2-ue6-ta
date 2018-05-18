@@ -2,42 +2,50 @@ import java.util.ArrayList;
 
 public class InRangeEntries {
 
-    public static ArrayList<DataEntry> addDataEntryIfInRange(ArrayList<DataEntry> entries, double pointLat, double pointLon, double radius){
+
+    //iterates over all DataEntries and returns an arraylist containing thoose which are in range to the origin Point
+    public static ArrayList<DataEntry> addInRangeEntrys(ArrayList<DataEntry> entries, double originX, double originY, double radius){
         ArrayList<DataEntry> inRangeEntries = new ArrayList<DataEntry>();
         for(int i = 0; i < entries.size(); i++){
-            if(inRadiusRange(pointLat,pointLon,entries.get(i).getLat(),entries.get(i).getLon(),radius)){
+            if(inRadiusRange(originX,originY,entries.get(i).getX(),entries.get(i).getY(),radius)){
                 inRangeEntries.add(entries.get(i));
             }
         }
         return inRangeEntries;
-
     }
 
-    public static boolean inRadiusRange (double lat1, double lon1, double lat2, double lon2, double radius) {
-        int radiusEarth = 6371;
-        double differenceLat = (degreeToRad(lat2)- degreeToRad(lat1));
-        double differenceLon = (degreeToRad(lon2)- degreeToRad(lon1));
+    public static boolean inRadiusRange (double x1, double y1, double x2, double y2, double radius) {
 
-        /*
-        This uses the ‘haversine’ formula to calculate the great-circle distance between two points
-        a = sin²(Δφ/2) + cos φ1 ⋅ cos φ2 ⋅ sin²(Δλ/2)
-        c = 2 ⋅ atan2( √a, √(1−a) )
-        d = R ⋅ c
+        //calculates distance between two points using pythagoras
+        double d = Math.pow((x2-x1),2) + Math.pow((y2 - y1),2) ;
 
-        φ is latitude, λ is longitude, R is earth’s radius (mean radius = 6,371km);
-        note that angles need to be in radians to pass to trig functions!
-         */
-
-        double a = Math.pow(Math.sin(differenceLat/2),2) + Math.cos(degreeToRad(lat1)) * Math.cos(degreeToRad(lat2)) *
-                Math.sin(differenceLon/2) * Math.sin(differenceLon/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        double d = radiusEarth * c; //distance in km
-
-        return d <= radius ? true : false;
-
+        //squaring is used, because taking a square root is much more inneficient, than just square 'radius'
+        return d <= Math.pow(radius,2) ? true : false;
     }
 
-    private static double degreeToRad (double deg){
-        return deg*Math.PI/180;
+    /*
+    Berechnet die Anzahl aller Flughäfe, in deren r -Längeneinheiten- Umkreis sich mindestens n Bahnhöfe befinden
+     */
+    public static int AirportsInTrainstationRange(ArrayList<DataEntry> entries, double r, int n){
+        int numTrainstationsInRange = 0;
+        int numAirports = 0;
+
+        for(int i = 0; i< entries.size();i++){  //iterates over all airports
+            if (entries.get(i).getType() != Enumerations.LocationType.AIRPORT) continue;
+            for (int j = 0; j < entries.size(); j++) {  // iterates over all trainstations
+                if(entries.get(j).getType() == Enumerations.LocationType.TRAINSTATION){
+                    //check if current airport is in range of current trainstation
+                    if(inRadiusRange(entries.get(j).getX(), entries.get(j).getY(), entries.get(i).getX(), entries.get(i).getY(), r)) {
+                        numTrainstationsInRange++;  //if in range, then increment trainstation counter var
+                    }
+                }
+            }
+            //check if counter variable 'numTr...' is bigger then lower limit 'n' and increment airport counter var
+            if(numTrainstationsInRange >= n) numAirports++;
+            numTrainstationsInRange = 0;    //reset trainstation counter variable
+        }
+        return numAirports;
     }
+
+
 }
