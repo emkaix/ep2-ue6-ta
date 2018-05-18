@@ -5,35 +5,26 @@ import java.security.InvalidParameterException;
  */
 public class DataEntry {
     private String name;
-    private double x;
-    private double y;
-    private Enumerations.LocationType type;
 
+    public Vector2D getVec() {
+        return vec;
+    }
+
+    private Vector2D vec;
+    private Enumerations.LocationType type;
     
-    public DataEntry(String name, double x, double y, Enumerations.LocationType type){
+    public DataEntry(String name, Vector2D vec, Enumerations.LocationType type){
         if (name == null) throw new InvalidParameterException();
+        this.vec = vec;
         this.name = name;
-        this.x = x;
-        this.y = y;
         this.type = type;
     }
 
 
     //Getter-Methods
-
-
     public String getName() {
         return name;
     }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
     public Enumerations.LocationType getType() {
         return type;
     }
