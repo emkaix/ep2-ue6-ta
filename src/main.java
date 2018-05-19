@@ -20,10 +20,17 @@ public class main {
         DataReader dr2 = new DataReader(new QuadTree(new AABB(new Vector2D(0, 0), 100000), 1));
         IDataCollection dc2 = dr2.ReadEntriesFromFile();
 
+
         //zweite beispielanfrage laut angabezettel
         EntryCount counter2 = dc2.inRange(new Vector2D(1818.54657, 5813.29982), 100);
         System.out.println(counter);
 
+
+
+        //Testing for Quadtree
+        DataReader drr = new DataReader(new Quadtree());
+        IDataCollection dcc = drr.ReadEntriesFromFile();
+        IDataCollection a = dcc;
 
     }
 
