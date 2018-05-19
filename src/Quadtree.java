@@ -1,30 +1,118 @@
-public class Quadtree implements IDataCollection{
-    private Node root;
+import java.util.ArrayList;
 
-    public void add(DataEntry entry) {
-        root = add(root, entry);
+
+public class QuadTree implements IDataCollection{
+    ArrayList<DataEntry> entries;
+    QuadTree upperLeft;
+    QuadTree upperRight;
+    QuadTree lowerLeft;
+    QuadTree lowerRight;
+    AABB boundary;
+    int capacity;
+    boolean divided;
+
+    public QuadTree(AABB boundary, int capacity) {
+        this.entries = new ArrayList<>();
+        this.boundary = boundary;
+        this.capacity = capacity;
+        divided = false;
     }
 
-    private Node add(Node node, DataEntry entry) {
-        double x = entry.getVec().getX();
-        double y = entry.getVec().getY();
+    public void subdivide(){
+        double x = this.boundary.getCenter().getX();
+        double y = this.boundary.getCenter().getY();
+        double halfLength = this.boundary.getHalfLength();
 
-        if (node == null) return new Node(entry);
+        AABB ul = new AABB(new Vector2D(x - halfLength/2, y + halfLength/2), halfLength/2);
+        upperLeft = new QuadTree(ul, 1);
+        AABB ur = new AABB(new Vector2D(x + halfLength/2, y + halfLength/2), halfLength/2);
+        upperRight = new QuadTree(ur, 1);
+        AABB ll = new AABB(new Vector2D(x - halfLength/2, y - halfLength/2), halfLength/2);
+        lowerLeft = new QuadTree(ll, 1);
+        AABB lr = new AABB(new Vector2D(x + halfLength/2, y - halfLength/2), halfLength/2);
+        lowerRight = new QuadTree(lr, 1);
 
-        else if ( x<node.getX() &&  y< node.getY()) node.setSW(add(node.getSW(),entry));
-        else if ( x<node.getX() &&  y> node.getY()) node.setNW(add(node.getNW(),entry));
-        else if ( x>node.getX() &&  y< node.getY()) node.setSE(add(node.getSE(),entry));
-        else if ( x>node.getX() &&  y> node.getY()) node.setNE(add(node.getNE(),entry));
-        return node;
+        divided = true;
+    }
+
+    @Override
+    public void add(DataEntry entry){
+        if (!boundary.containsPoint(entry.getVec())) return;
+
+        if (entries.size() < capacity){
+            entries.add(entry);
+        } else {
+            if (!divided)
+                subdivide();
+
+            upperLeft.add(entry);
+            upperRight.add(entry);
+            lowerLeft.add(entry);
+            lowerRight.add(entry);
+        }
     }
 
     @Override
     public EntryCount inRange(Vector2D location, double radius) {
-        return null;
+        AABB range = new AABB(location, radius);
+        return inRangeRec(range, radius);
+    }
+
+   private EntryCount inRangeRec(AABB range, double radius) {
+        EntryCount counter = new EntryCount();
+        if (!boundary.intersectsAABB(range))
+            return counter;
+
+       for (DataEntry e : entries) {
+           if (range.containsPointRadius(e.getVec(), radius)){
+               if (e.getType() == Enumerations.LocationType.AIRPORT)
+                   counter.incAirportCount();
+               else
+                   counter.incTrainstationCount();
+           }
+       }
+       if (!divided)
+           return counter;
+
+       counter.sum(upperLeft.inRangeRec(range, radius));
+       counter.sum(upperRight.inRangeRec(range, radius));
+       counter.sum(lowerLeft.inRangeRec(range, radius));
+       counter.sum(lowerRight.inRangeRec(range, radius));
+       return counter;
     }
 
     @Override
     public EntryCount TrainstationsNearAirports(double r, int n) {
-        return null;
+        EntryCount airportCounter = new EntryCount();
+        for (DataEntry e: entries) {
+            if (e.getType() != Enumerations.LocationType.AIRPORT) continue;
+            EntryCount buffer = inRange(e.getVec(), r);
+            if (buffer.getTrainstationCount() >= n){
+                airportCounter.incAirportCount();
+            }
+        }
+
+        if(!divided)
+            return airportCounter;
+
+        airportCounter.sum(upperLeft.TrainstationsNearAirports(r, n));
+        airportCounter.sum(upperRight.TrainstationsNearAirports(r, n));
+        airportCounter.sum(lowerLeft.TrainstationsNearAirports(r, n));
+        airportCounter.sum(lowerRight.TrainstationsNearAirports(r, n));
+        return airportCounter;
     }
+
+//    public EntryCount test(double r, int n, ArrayList<DataEntry> entries) {
+//        EntryCount airportCounter = new EntryCount();
+//        for (DataEntry e: entries) {
+//            if (e.getType() != Enumerations.LocationType.AIRPORT) continue;
+//            EntryCount buffer = inRange(e.getVec(), r);
+//            if (buffer.getTrainstationCount() >= n) airportCounter.incAirportCount();
+//        }
+//        return airportCounter;
+//    }
+
+
+
+
 }

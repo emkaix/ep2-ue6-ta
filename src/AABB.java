@@ -23,7 +23,7 @@ public class AABB {
     }
 
     /**
-     * Checks whether a given point lies inside this AABB, and is within a given radius
+     * Checks whether a given point lies inside this AABB, and is within a given radius from the center
      * @param point the point which should be checked whether it is inside this AABB
      * @param radius the radius the point should be within
      * @return returns true if the point is inside the AABB and the radius, false otherwise
@@ -33,10 +33,10 @@ public class AABB {
     }
 
     public boolean intersectsAABB(AABB box){
-        return !(box.center.getX() - box.halfLength > this.center.getX() + this.halfLength ||
-                box.center.getX() + box.halfLength < this.center.getX() - this.halfLength ||
-                box.center.getY() - box.halfLength > this.center.getY() + this.halfLength ||
-                box.center.getY() + box.halfLength < this.center.getY() - this.halfLength);
+        return !(box.center.getX() - box.halfLength >= this.center.getX() + this.halfLength ||
+                box.center.getX() + box.halfLength <= this.center.getX() - this.halfLength ||
+                box.center.getY() - box.halfLength >= this.center.getY() + this.halfLength ||
+                box.center.getY() + box.halfLength <= this.center.getY() - this.halfLength);
     }
 
     public Vector2D getCenter() {
