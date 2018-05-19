@@ -23,6 +23,11 @@ public class EntryCount {
         AirportCount = 0;
     }
 
+    public void sum(EntryCount counter){
+        this.AirportCount += counter.AirportCount;
+        this.TrainstationCount += counter.TrainstationCount;
+    }
+
     @Override
     public String toString() {
         return String.format("Airports: %d\tTrainstations: %d", AirportCount, TrainstationCount);
