@@ -51,12 +51,33 @@ public class QuadTree implements IDataCollection{
         }
     }
 
-
-
-
     @Override
     public EntryCount inRange(Vector2D location, double radius) {
-        return null;
+        AABB range = new AABB(location, radius);
+        return inRangeRec(range, radius);
+    }
+
+   private EntryCount inRangeRec(AABB range, double radius) {
+        EntryCount counter = new EntryCount();
+        if (!boundary.intersectsAABB(range))
+            return counter;
+
+       for (DataEntry e : entries) {
+           if (range.containsPointRadius(e.getVec(), radius)){
+               if (e.getType() == Enumerations.LocationType.AIRPORT)
+                   counter.incAirportCount();
+               else
+                   counter.incTrainstationCount();
+           }
+       }
+       if (!divided)
+           return counter;
+
+       counter.sum(upperLeft.inRangeRec(range, radius));
+       counter.sum(upperRight.inRangeRec(range, radius));
+       counter.sum(lowerLeft.inRangeRec(range, radius));
+       counter.sum(lowerRight.inRangeRec(range, radius));
+       return counter;
     }
 
     @Override
