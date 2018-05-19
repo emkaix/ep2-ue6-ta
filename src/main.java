@@ -17,7 +17,10 @@ public class main {
         System.out.println(counter2.printAirports());
 
 
-
+        //Testing for Quadtree
+        DataReader drr = new DataReader(new Quadtree());
+        IDataCollection dcc = drr.ReadEntriesFromFile();
+        IDataCollection a = dcc;
     }
 
 
