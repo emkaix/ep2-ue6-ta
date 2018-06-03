@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Main {
     //global variables
     public static final String PATH = System.getProperty("user.dir") + "/data/junctions.csv";
-    public static final int QUADTREE_CAPACITY = 50;
+    public static final int QUADTREE_CAPACITY = 4;
     public static final int QUADTREE_HALFLENGTH = 50000;
 
     public static void main(String[] args) {
