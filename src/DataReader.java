@@ -7,6 +7,15 @@ import java.util.Scanner;
  */
 public class DataReader {
     private IDataCollection collection;
+    private double maxValue = 0;
+
+    /**
+     * Returns the maximum value ever occured in the input data set
+     * @return the maximum value
+     */
+    public double getMaxValue() {
+        return maxValue;
+    }
 
     public DataReader(IDataCollection collection) {
         this.collection = collection;
@@ -22,6 +31,9 @@ public class DataReader {
                 new File(Main.PATH), "UTF-8")) {
             while (s.hasNext()) {
                 DataEntry entry = GetEntryData(s.nextLine());
+                if (entry.getVec().getX() > maxValue || entry.getVec().getY() > maxValue) {
+                    maxValue = Math.max(entry.getVec().getX(), entry.getVec().getY());
+                }
                 collection.add(entry);
             }
         } catch (FileNotFoundException e) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
  * A QuadTree which represents the "efficient data structure"
  */
 public class QuadTree implements IDataCollection {
-    private static final QuadTree ROOT = new QuadTree(new AABB(new Vector2D(0, 0), Main.QUADTREE_HALFLENGTH), Main.QUADTREE_CAPACITY);
+    public static QuadTree ROOT = new QuadTree(new AABB(new Vector2D(0, 0), Main.QUADTREE_HALFLENGTH), Main.QUADTREE_CAPACITY);
     private ArrayList<DataEntry> entries;
     private QuadTree upperLeft;
     private QuadTree upperRight;
@@ -137,5 +137,14 @@ public class QuadTree implements IDataCollection {
         ret.addAll(lowerRight.toArray());
 
         return ret;
+    }
+
+    /**
+     * Gibt den Namen der Collection zurück
+     * @return
+     */
+    @Override
+    public String toString() {
+        return "Quadtree";
     }
 }

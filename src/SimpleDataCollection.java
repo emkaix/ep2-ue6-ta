@@ -36,4 +36,13 @@ public class SimpleDataCollection implements IDataCollection {
         }
         return airportCounter;
     }
+
+    /**
+     * Gibt den Namen der Collection zurück
+     * @return
+     */
+    @Override
+    public String toString() {
+        return "SimpleDataCollection";
+    }
 }
